@@ -218,9 +218,9 @@
         "lines": [
           1,
           1,
-          16,
-          16,
-          16,
+          26,
+          26,
+          26,
           1,
           null,
           null
@@ -237,6 +237,8 @@
       },
       "/Users/gwendolynruiz/turing/3module/rails-engine/config/routes.rb": {
         "lines": [
+          1,
+          null,
           1,
           null,
           1,
@@ -365,6 +367,32 @@
           10,
           null,
           null,
+          null,
+          1,
+          1,
+          1,
+          1,
+          null,
+          1,
+          null,
+          1,
+          null,
+          1,
+          1,
+          null,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          null,
           null
         ]
       },
@@ -451,6 +479,11 @@
           1,
           1,
           null,
+          null,
+          1,
+          1,
+          1,
+          null,
           null
         ]
       },
@@ -468,6 +501,22 @@
           2,
           null,
           15,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1,
+          null,
+          1,
+          null,
           null,
           null,
           null,
@@ -539,6 +588,6 @@
         ]
       }
     },
-    "timestamp": 1661915362
+    "timestamp": 1661917890
   }
 }
