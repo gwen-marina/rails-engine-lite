@@ -88,10 +88,10 @@ RSpec.describe "Item's API" do
     item = create(:item, merchant_id: merchant.id)
 
     delete "/api/v1/items/#{item.id}"
+
     expect(response).to be_successful
     expect(response.status).to eq(204)
     expect(Item.count).to be(0)
-    expect{Item.find(item.id)}.to raise_error(ActiveRecord::RecordNotFound)
-    # expect(Item.exists?(item.id)).to be false 
+    expect(Item.exists?(item.id)).to be false 
   end
 end
