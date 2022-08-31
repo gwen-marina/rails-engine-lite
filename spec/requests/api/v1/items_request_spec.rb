@@ -27,7 +27,6 @@ RSpec.describe "Item's API" do
       expect(item[:attributes][:description]).to be_a String
 
       expect(item[:attributes]).to have_key(:unit_price)
-      # binding.pry
       expect(item[:attributes][:unit_price]).to be_a Float
 
       expect(item[:attributes]).to have_key(:merchant_id)
