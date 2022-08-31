@@ -119,6 +119,10 @@ GEM
     rb-fsevent (0.11.2)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
+    rspec (3.11.0)
+      rspec-core (~> 3.11.0)
+      rspec-expectations (~> 3.11.0)
+      rspec-mocks (~> 3.11.0)
     rspec-core (3.11.0)
       rspec-support (~> 3.11.0)
     rspec-expectations (3.11.0)
@@ -137,6 +141,8 @@ GEM
       rspec-support (~> 3.10)
     rspec-support (3.11.0)
     ruby_dep (1.5.0)
+    shoulda-matchers (5.1.0)
+      activesupport (>= 5.2.0)
     simplecov (0.21.2)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
@@ -175,7 +181,9 @@ DEPENDENCIES
   pry
   puma (~> 3.11)
   rails (~> 5.2.6)
+  rspec
   rspec-rails
+  shoulda-matchers
   simplecov
   spring
   spring-watcher-listen (~> 2.0.0)
