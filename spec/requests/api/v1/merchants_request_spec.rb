@@ -41,4 +41,14 @@ RSpec.describe "Merchant's API" do
     expect(merchant[:attributes][:name]).to be_a String
     expect(merchant[:type]).to eq("merchant")
   end 
+
+  it "can get all items for a given merchant id" do 
+    merchant = Merchant.create!(name: Faker::Company.name)
+    merchant_items = create_list(:item, 5, merchant_id: merchant.id)
+
+    get "/api/v1/merchants/#{merchant.id}/items"
+    
+    merchant_response = JSON.parse(response.body, symbolize_names: true)
+    items = merchant_response[:data]
+  end
 end
