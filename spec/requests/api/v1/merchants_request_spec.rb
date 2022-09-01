@@ -51,4 +51,6 @@ RSpec.describe "Merchant's API" do
     merchant_response = JSON.parse(response.body, symbolize_names: true)
     items = merchant_response[:data]
   end
+
+
 end
