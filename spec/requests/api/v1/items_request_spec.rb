@@ -233,37 +233,22 @@ RSpec.describe "Item's API" do
     end
   end
 
-  # it 'can return an empty result if no search criteria matches' do
-  #   merchant = create(:merchant)
-  #   item_1 = Item.create(name: "thing one", description: "an item", unit_price: 2.00, merchant_id: merchant.id)
-  #   item_2 = Item.create(name: "thingamajig", description: "an item", unit_price: 3.00, merchant_id: merchant.id)
-  #   item_3 = Item.create(name: "thingydo", description: "an item", unit_price: 1.00, merchant_id: merchant.id)
-  #   item_4 = Item.create(name: "junk", description: "a junk item", unit_price: 1.00, merchant_id: merchant.id)
+  it 'returns an empty array if no search results found' do
+    merchant = create(:merchant)
+    item_1 = Item.create(name: "thing one", description: "an item", unit_price: 2.00, merchant_id: merchant.id)
+    item_2 = Item.create(name: "thingamajig", description: "an item", unit_price: 3.00, merchant_id: merchant.id)
+    item_3 = Item.create(name: "thingydo", description: "an item", unit_price: 1.00, merchant_id: merchant.id)
+    item_4 = Item.create(name: "junk", description: "a junk item", unit_price: 1.00, merchant_id: merchant.id)
 
-  #   get "/api/v1/items/find_all?name=stuff"
+    get "/api/v1/items/find_all?name=stuff"
 
-  #   expect(response.status).to eq(200)
-    
-  #   item_response = JSON.parse(response.body, symbolize_names: true)
-  #   no_item_match = item_response[:data]
+    expect(response).to be_successful
 
-  #   expect(no_item_match.empty?).to be true
-  # end
+    items_response = JSON.parse(response.body, symbolize_names: true)
+    items_results = items_response[:data]
 
-  it 'returns an empty array if no results found' do
-        merchant = create(:merchant)
-        item_1 = create(:item, name: "Broomstick", merchant: merchant)
-        item_2 = create(:item, name: "Dragon Egg", merchant: merchant)
-        item_3 = create(:item, name: "Dozen eggs", merchant: merchant)
-        item_4 = create(:item, name: "Emu feather", merchant: merchant)
-
-        get "/api/v1/items/find_all?name=folder"
-        expect(response).to be_successful
-
-        items_response = JSON.parse(response.body, symbolize_names: true)
-        item_results = items_response[:data]
-
-        expect(item_results).to be_an Array
-        expect(item_results.empty?).to be true
-      end
+    expect(items_results).to be_an Array
+    expect(items_results.empty?).to be true
+    expect(items_results.count).to eq(0)
+  end
 end
