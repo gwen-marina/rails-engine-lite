@@ -88,6 +88,23 @@ RSpec.describe "Item's API" do
     expect(created_item.merchant_id).to eq(item_params[:merchant_id])
   end
 
+  it 'returns an error if attribute is missing from create or any attributes that are not allowed are sent' do
+    merchant = create_list(:merchant, 1).first
+    item_params = ({
+                  name: "doodad",
+                  unit_price: 2.00,
+                  merchant_id: merchant.id,
+                  extra: "stuff"
+                })
+
+    headers = {"CONTENT_TYPE" => "application/json"}
+
+    post "/api/v1/items", headers: headers, params: JSON.generate(item: item_params)
+
+    expect(response).to_not be_successful
+    expect(response.status).to eq(400)
+  end
+
   it "can edit an existing item" do
     merchant = create(:merchant)
     item = create(:item, merchant_id: merchant.id)
@@ -109,6 +126,33 @@ RSpec.describe "Item's API" do
     expect(response.status).to_not eq(404)
     expect(updated_item.name).to_not eq(previous_name)
     expect(updated_item.name).to eq('balloon')
+  end
+
+  it 'returns an error if trying to update an item that does not exist' do
+    merchant = create(:merchant)
+
+    item_params = ({
+      name: 'thing',
+      description: "a thing",
+      unit_price: 1.00,
+      merchant_id: merchant.id
+    })
+
+    headers = { 'CONTENT_TYPE' => 'application/json' }
+    post '/api/v1/items', headers: headers, params: JSON.generate(item: item_params)
+
+    item = Item.last
+
+    new_item_params = ({
+                    description: "It's an even better thing than before, really it is."
+                    })
+
+    headers = { 'CONTENT_TYPE' => 'application/json' }
+    patch '/api/v1/items/2', headers: headers, params: JSON.generate(item: new_item_params)
+
+    expect(response).to_not be_successful
+
+    expect(item.description).to eq(item_params[:description])
   end
 
   it "can delete an item" do 
@@ -147,4 +191,79 @@ RSpec.describe "Item's API" do
     expect(return_merchant[:attributes]).to have_key(:name)
     expect(return_merchant[:attributes][:name]).to be_a String
   end
+
+  it "can find all items based on search criteria" do
+    merchant = create(:merchant)
+    item_1 = Item.create(name: "thing one", description: "an item", unit_price: 2.00, merchant_id: merchant.id)
+    item_2 = Item.create(name: "thingamajig", description: "an item", unit_price: 3.00, merchant_id: merchant.id)
+    item_3 = Item.create(name: "thingydo", description: "an item", unit_price: 1.00, merchant_id: merchant.id)
+    item_4 = Item.create(name: "junk", description: "a junk item", unit_price: 1.00, merchant_id: merchant.id)
+  
+    get "/api/v1/items/find_all?name=thing"
+  
+    expect(response).to be_successful
+    expect(response.status).to eq(200)
+    
+    items_response = JSON.parse(response.body, symbolize_names: true)
+    items_results = items_response[:data]
+
+    expect(items_results).to be_an Array
+    expect(items_results.count).to eq(3)
+    
+    items_results.each do |item|
+        expect(item).to have_key :id
+        expect(item[:id]).to be_a String
+
+        expect(item).to have_key :type
+        expect(item[:type]).to eq('item')
+
+        expect(item).to have_key :attributes
+
+        expect(item[:attributes]).to have_key :name
+        expect(item[:attributes][:name]).to be_a String
+
+        expect(item[:attributes]).to have_key :description
+        expect(item[:attributes][:description]).to be_a String
+
+        expect(item[:attributes]).to have_key :unit_price
+        expect(item[:attributes][:unit_price]).to be_a Float
+
+        expect(item[:attributes]).to have_key :merchant_id
+        expect(item[:attributes][:merchant_id]).to be_a Integer
+    end
+  end
+
+  # it 'can return an empty result if no search criteria matches' do
+  #   merchant = create(:merchant)
+  #   item_1 = Item.create(name: "thing one", description: "an item", unit_price: 2.00, merchant_id: merchant.id)
+  #   item_2 = Item.create(name: "thingamajig", description: "an item", unit_price: 3.00, merchant_id: merchant.id)
+  #   item_3 = Item.create(name: "thingydo", description: "an item", unit_price: 1.00, merchant_id: merchant.id)
+  #   item_4 = Item.create(name: "junk", description: "a junk item", unit_price: 1.00, merchant_id: merchant.id)
+
+  #   get "/api/v1/items/find_all?name=stuff"
+
+  #   expect(response.status).to eq(200)
+    
+  #   item_response = JSON.parse(response.body, symbolize_names: true)
+  #   no_item_match = item_response[:data]
+
+  #   expect(no_item_match.empty?).to be true
+  # end
+
+  it 'returns an empty array if no results found' do
+        merchant = create(:merchant)
+        item_1 = create(:item, name: "Broomstick", merchant: merchant)
+        item_2 = create(:item, name: "Dragon Egg", merchant: merchant)
+        item_3 = create(:item, name: "Dozen eggs", merchant: merchant)
+        item_4 = create(:item, name: "Emu feather", merchant: merchant)
+
+        get "/api/v1/items/find_all?name=folder"
+        expect(response).to be_successful
+
+        items_response = JSON.parse(response.body, symbolize_names: true)
+        item_results = items_response[:data]
+
+        expect(item_results).to be_an Array
+        expect(item_results.empty?).to be true
+      end
 end
