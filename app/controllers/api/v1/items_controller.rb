@@ -21,11 +21,11 @@ class Api::V1::ItemsController < ApplicationController
     if Item.exists?(params[:id])
       item = Item.find(params[:id])
       item.update(item_params)
-      if item.save
-        render json: ItemSerializer.single_item(item)
-      else
-        render status: 404
-      end
+        if item.save
+          render json: ItemSerializer.single_item(item)
+        else
+          render status: 404
+        end
     else
       render status: 404
     end
@@ -40,7 +40,6 @@ class Api::V1::ItemsController < ApplicationController
     item = Item.find_all_by_name(params[:name])
     render json: ItemSerializer.format_items(item)
   end
-
 
   private
 

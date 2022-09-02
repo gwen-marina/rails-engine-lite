@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe "Item's API" do
-  it "sends a list of all items" do 
+  it 'sends a list of all items' do 
     merchant = Merchant.create!(name: Faker::Company.name)
     merchant_items = create_list(:item, 10, merchant_id: merchant.id)
 
@@ -36,7 +36,7 @@ RSpec.describe "Item's API" do
     end
   end
 
-  it "can get one item" do 
+  it 'can get one item' do 
     merchant = Merchant.create!(name: Faker::Company.name)
     merchant_items = create_list(:item, 10, merchant_id: merchant.id)
     item = Item.first
@@ -64,7 +64,7 @@ RSpec.describe "Item's API" do
     expect(item[:type]).to eq("item")
   end
 
-  it "can create a new item" do 
+  it 'can create a new item' do 
     merchant = Merchant.create!(name: Faker::Company.name)
     
     item_params = ({
@@ -105,7 +105,7 @@ RSpec.describe "Item's API" do
     expect(response.status).to eq(400)
   end
 
-  it "can edit an existing item" do
+  it 'can edit an existing item' do
     merchant = create(:merchant)
     item = create(:item, merchant_id: merchant.id)
 
@@ -151,11 +151,12 @@ RSpec.describe "Item's API" do
     patch '/api/v1/items/2', headers: headers, params: JSON.generate(item: new_item_params)
 
     expect(response).to_not be_successful
+    expect(response.status).to eq(404)
 
     expect(item.description).to eq(item_params[:description])
   end
 
-  it "can delete an item" do 
+  it 'can delete an item' do 
     merchant = create(:merchant)
     item = create(:item, merchant_id: merchant.id)
 
@@ -168,7 +169,7 @@ RSpec.describe "Item's API" do
     expect(Item.exists?(item.id)).to be false 
   end
 
-  it "can get the merchant data for a given item id" do 
+  it 'can get the merchant data for a given item id' do 
     merchant = create(:merchant)
     item = create(:item, merchant_id: merchant.id)
 
@@ -192,7 +193,7 @@ RSpec.describe "Item's API" do
     expect(return_merchant[:attributes][:name]).to be_a String
   end
 
-  it "can find all items based on search criteria" do
+  it 'can find all items based on search criteria' do
     merchant = create(:merchant)
     item_1 = Item.create(name: "thing one", description: "an item", unit_price: 2.00, merchant_id: merchant.id)
     item_2 = Item.create(name: "thingamajig", description: "an item", unit_price: 3.00, merchant_id: merchant.id)
